@@ -1,23 +1,5 @@
 /* https://dribbble.com/shots/12216116-Neumorphism-Calculator-Design */
-[data-theme="light"] {
-  --accent-color: #F42222;
-  --body-bg-color: linear-gradient(#dadada, #f0f0f0);
-  --box-shadow: -3px -3px 4px #ffffff, 3px 3px 4px #cacfd2;
-  --box-shadow-hover: 1px -1px 4px #cacfd2, -1px 1px 4px #ffffff;
-  --box-shadow-inner: 3px -3px 4px #cacfd2, -3px 3px 4px #ffffff;
-  --main-bg-color: #f5f6f7;
-  --main-color: #64696d;
-}
 
-[data-theme="dark"] {
-  --accent-color: #42C636;
-  --body-bg-color: linear-gradient(#2c3e50, #34495e);
-  --box-shadow: -3px -3px 4px #cacfd245, 3px 3px 4px #000000;
-  --box-shadow-hover: 1px -1px 4px #000000, -1px 1px 4px #cacfd245;
-  --box-shadow-inner: 3px -3px 4px #000000, -3px 3px 4px #cacfd245;
-  --main-bg-color: #303B47;
-  --main-color: #ffffff;
-}
 
 * {
   font-family: sans-serif;
