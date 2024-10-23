@@ -1,5 +1,22 @@
-/* https://dribbble.com/shots/12216116-Neumorphism-Calculator-Design */
+[data-theme="light"] {
+  --accent-color: #F42222;
+  --body-bg-color: linear-gradient(#dadada, #f0f0f0);
+  --box-shadow: -3px -3px 4px #ffffff, 3px 3px 4px #cacfd2;
+  --box-shadow-hover: 1px -1px 4px #cacfd2, -1px 1px 4px #ffffff;
+  --box-shadow-inner: 3px -3px 4px #cacfd2, -3px 3px 4px #ffffff;
+  --main-bg-color: #f5f6f7;
+  --main-color: #64696d;
+}
 
+[data-theme="dark"] {
+  --accent-color: #42C636;
+  --body-bg-color: linear-gradient(#2c3e50, #34495e);
+  --box-shadow: -3px -3px 4px #cacfd245, 3px 3px 4px #000000;
+  --box-shadow-hover: 1px -1px 4px #000000, -1px 1px 4px #cacfd245;
+  --box-shadow-inner: 3px -3px 4px #000000, -3px 3px 4px #cacfd245;
+  --main-bg-color: #303B47;
+  --main-color: #635b5b;
+}
 
 * {
   font-family: sans-serif;
@@ -13,62 +30,73 @@
 }
 
 .body {
-  align-items: center;
-  background: var(--body-bg-color);
   display: flex;
-  height: 100vh;
-  justify-content: center;
+  justify-content: center; /* Center horizontally */
+  align-items: center; /* Center vertically */
+  height: 100vh; /* Full viewport height */
+  background: var(--body-bg-color);
 }
 
 .calculator {
   background-color: var(--main-bg-color);
   border-radius: 1.875em;
   box-shadow: var(--box-shadow);
-  display: grid;
-  grid-template-rows: 20px 28% auto;
-  height: 600px;
-  padding: 15px 10px 10px;
-  position: relative;
-  width: 300px;
+  display: flex;
+  flex-direction: column; /* Stack elements vertically */
+  height: 700px; /* Fixed height */
+  width: 400px; /* Fixed width */
+  padding: 13px 8px; /* Padding inside calculator */
+}
+
+.screen {
+  display: flex;
+  flex-direction: column; /* Stack operation and total */
+  justify-content: flex-end; /* Align contents to the bottom */
+  padding: 8px;
 }
 
 .keyboard {
+  background-color: var(--main-bg-color); /* Add background color to keyboard */
+  border: 2px solid var(--accent-color); /* Add border */
+  border-radius: 10px; /* Round corners of the keyboard */
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  grid-template-rows: repeat(5, 80px);
+  grid-template-columns: repeat(4, 1fr); /* 4 columns */
+  grid-template-rows: repeat(5, 80px); /* 5 rows */
   height: 100%;
+  justify-items: center; /* Center items horizontally in each cell */
+  align-items: center; /* Center items vertically in each cell */
+  margin-top: auto; /* Push the keyboard to the bottom */
+  padding: 8px; /* Add some padding around buttons */
 }
 
 .key {
   align-items: center;
-  align-self: center;
   border-radius: 50%;
-  background-color: var(--main-bg-color);
+  background-color: #fff; /* Set button background */
   box-shadow: var(--box-shadow);
   color: var(--main-color);
   cursor: pointer;
   display: flex;
-  font-size: 20px;
-  font-weight: 900;
-  height: 60px;
-  justify-content: center;
-  justify-self: center;
-  width: 60px;
+  font-size: 18px;
+  font-weight: 800;
+  height: 60px; /* Button height */
+  width: 60px; /* Button width */
+  justify-content: center; /* Center text inside button */
 }
 
 .key:hover {
   box-shadow: var(--box-shadow-hover);
-  transform: scale(0.96);
+  transform: scale(0.98); /* Slightly reduce scale on hover */
 }
 
 .key:active {
   box-shadow: var(--box-shadow-inner);
-  transform: scale(0.92);
+  transform: scale(0.95); /* Further reduce scale on active */
 }
 
-.net, .battery {
-  margin-left: 2px;
-  width: 20px;
+.total {
+  color: var(--accent-color);
+  font-size: 45px;
 }
 
 .operation {
@@ -78,32 +106,17 @@
   min-height: 18px;
 }
 
-.result {
+.topbar {
+  align-items: center;
   display: flex;
-  flex-direction: column;
-  justify-content: flex-end;
-}
-
-.screen {
-  display: grid;
-  grid-template-rows: 30% 70%;
-  padding: 10px 10px 30px;
-  position: relative;
-  text-align: right;
-}
-
-.screen::after {
-  bottom: 15px;
   color: var(--main-color);
-  content: '';
-  font-size: 50px;
-  font-weight: 100;
-  left: 10px;
-  position: absolute;
+  font-size: 13px;
+  justify-content: flex-end;
+  margin: 0 15px;
 }
 
-.signal {
-  width: 15px;
+.time {
+  margin-right: auto; /* Align time to the left */
 }
 
 .theme-mode {
@@ -112,7 +125,7 @@
 }
 
 .theme-input {
-  display: none;
+  display: none; /* Hide default checkbox */
 }
 
 .theme-label {
@@ -152,26 +165,4 @@
 
 .theme-label:hover svg {
   transform: scale(0.95);
-}
-
-.time {
-  margin-right: auto;
-}
-
-.topbar {
-  align-items: center;
-  display: flex;
-  color: var(--main-color);
-  font-size: 13px;
-  justify-content: flex-end;
-  margin: 0 15px;
-}
-
-.topbar svg {
-  fill: var(--main-color);
-}
-
-.total {
-  color: var(--accent-color);
-  font-size: 45px;
 }

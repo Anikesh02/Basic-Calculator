@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Invoice Generator</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .container {
+            width: 50%;
+            max-width: 800px;
+            background: white;
+            border: 1px solid #ccc;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .header h1 {
+            color: #007bff;
+        }
+
+        .client-info {
+            margin-bottom: 20px;
+        }
+
+        .client-info h2 {
+            margin-bottom: 10px;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 5px;
+        }
+
+        input {
+            width: calc(100% - 22px);
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+
+        .fixed-width {
+            width: 300px;
+        }
+
+        button {
+            padding: 10px 15px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+        }
+
+        th,
+        td {
+            padding: 10px;
+            border: 1px solid #ccc;
+            text-align: center;
+        }
+
+        .total-section {
+            margin-top: 20px;
+        }
+
+        .total-section p {
+            margin: 5px 0;
+            text-align: right;
+        }
+
+        .total-section p span {
+            font-weight: bold;
+        }
+
+        .payment-terms {
+            margin-top: 30px;
+        }
+
+        .payment-terms h3 {
+            margin-bottom: 10px;
+        }
+
+        .bank-details {
+            margin-top: 15px;
+        }
+
+        .signature {
+            margin-top: 40px;
+            text-align: right;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Invoice</h1>
+            <div style="display: flex; align-items: center; justify-content: space-between;">
+                <p>Invoice Number: <span id="invoiceNumber">#001</span></p>
+                <p>Date: <span id="invoiceDate">2024-10-18</span></p>
+            </div>
+        </div>
+        <div class="Company-info">
+            <h2>From</h2>
+            <p><input type="text" id="companyName" class="fixed-width" placeholder="Company Name"></p>
+            <div style="display: flex; width: 100%; gap: 4px;">
+                <div class="form-group" style="width: 100%;">
+                    <label for="GSTNO">GST NO:</label>
+                    <input type="text" id="GSTNO" class="fixed-width" placeholder="GST No">
+                </div>
+                <div class="form-group" style="width: 100%;">
+                    <label for="Address">Address:</label>
+                    <input type="text" id="address" class="fixed-width" placeholder="Address">
+                </div>
+            </div>
+        </div>
+        <div class="client-info">
+            <h3>Bill To</h3>
+            <p><input type="text" id="clientName" placeholder="Client Name"></p>
+            <div style="display: flex; width: 100%; gap: 4px;">
+                <div class="form-group" style="width: 100%;">
+                    <label for="clientEmail">Client Email:</label>
+                    <input type="email" id="clientEmail" placeholder="Client Email">
+                </div>
+                <div class="form-group" style="width: 100%;">
+                    <label for="clientAddress">Client Address:</label>
+                    <input type="text" id="clientAddress" placeholder="Client Address">
+                </div>
+            </div>
+        </div>
+
+        <form id="invoiceForm">
+            <div class="form-group">
+                <label for="product">Product Name:</label>
+                <input type="text" id="product" required>
+            </div>
+            <div style="display: flex; gap: 4px;">
+                <div class="form-group" style="width: 100%;">
+                    <label for="quantity">Quantity:</label>
+                    <input type="number" id="quantity" required>
+                </div>
+                <div class="form-group" style="width: 100%;">
+                    <label for="price">Price per Unit:</label>
+                    <input type="number" id="price" required>
+                </div>
+            </div>
+            <button style="margin: 0 0 15px;" type="button" id="addProduct">Add Product</button>
+        </form>
+
+        <table id="invoiceTable">
+            <thead>
+                <tr>
+                    <th>Product</th>
+                    <th>Quantity</th>
+                    <th>Price</th>
+                    <th>Total</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- Products will be added here -->
+            </tbody>
+        </table>
+
+        <div class="total-section">
+            <p>SUB TOTAL: <span id="subTotal">0.00</span></p>
+            <p>Total Amount (In Words): <span id="totalInWords">Zero Only</span></p>
+            <p>CGST 9%: <span id="cgst">0.00</span></p>
+            <p>SGST 9%: <span id="sgst">0.00</span></p>
+            <p>GRAND TOTAL: <span id="grandTotal">0.00</span></p>
+        </div>
+
+        <div class="payment-terms">
+            <h3>Payment Terms:</h3>
+            <div class="bank-details">
+                <p>A/c Holder's Name: <span>Abc</span></p>
+                <p>Bank Name: <span>State Bank of India (SBI)</span></p>
+                <p>Account No: <span>123456789012</span></p>
+                <p>IFSC Code: <span>SBIN0001234</span></p>
+                <p>Branch: <span>Malad West, Mumbai</span></p>
+            </div>
+        </div>
+
+        <div class="signature">
+            <p>ABC.XYZ</p>
+        </div>
+
+        <button id="downloadPDF">Download PDF</button>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.4.0/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.13/jspdf.plugin.autotable.min.js"></script>
+    <script>
+        document.getElementById("addProduct").addEventListener("click", function () {
+            const product = document.getElementById("product").value;
+            const quantity = parseInt(document.getElementById("quantity").value);
+            const price = parseFloat(document.getElementById("price").value);
+
+            if (product && quantity && price) {
+                const total = (quantity * price).toFixed(2);
+                const tableBody = document.querySelector("#invoiceTable tbody");
+
+                const row = document.createElement("tr");
+                row.innerHTML = `
+                    <td>${product}</td>
+                    <td>${quantity}</td>
+                    <td>${price.toFixed(2)}</td>
+                    <td>${total}</td>
+                `;
+                tableBody.appendChild(row);
+
+                updateTotals();
+                document.getElementById("invoiceForm").reset();
+            }
+        });
+
+        function updateTotals() {
+            const rows = document.querySelectorAll("#invoiceTable tbody tr");
+            let subTotal = 0;
+            rows.forEach((row) => {
+                const total = parseFloat(row.cells[3].innerText);
+                subTotal += total;
+            });
+
+            const cgst = (subTotal * 0.09).toFixed(2);
+            const sgst = (subTotal * 0.09).toFixed(2);
+            const grandTotal = (parseFloat(subTotal) + parseFloat(cgst) + parseFloat(sgst)).toFixed(2);
+
+            document.getElementById("subTotal").innerText = subTotal.toFixed(2);
+            document.getElementById("cgst").innerText = cgst;
+            document.getElementById("sgst").innerText = sgst;
+            document.getElementById("grandTotal").innerText = grandTotal;
+
+            document.getElementById("totalInWords").innerText = convertNumberToWords(grandTotal) + " Only";
+        }
+
+        function convertNumberToWords(amount) {
+            const words = [
+                '', 'One', 'Two', 'Three', 'Four', 'Five', 'Six', 'Seven', 'Eight', 'Nine', 'Ten',
+                'Eleven', 'Twelve', 'Thirteen', 'Fourteen', 'Fifteen', 'Sixteen', 'Seventeen', 'Eighteen', 'Nineteen',
+                'Twenty', 'Thirty', 'Forty', 'Fifty', 'Sixty', 'Seventy', 'Eighty', 'Ninety'
+            ];
+
+            const getBelowHundred = (n) => {
+                if (n <= 20) return words[n];
+                const tens = Math.floor(n / 10);
+                const units = n % 10;
+                return words[20 + tens - 2] + (units ? ' ' + words[units] : '');
+            };
+
+            const getBelowThousand = (n) => {
+                if (n < 100) return getBelowHundred(n);
+                const hundreds = Math.floor(n / 100);
+                return words[hundreds] + ' Hundred ' + getBelowHundred(n % 100);
+            };
+
+            let amountStr = '';
+            if (amount > 0) {
+                const thousands = Math.floor(amount / 1000);
+                const rest = amount % 1000;
+                amountStr = (thousands ? getBelowHundred(thousands) + ' Thousand ' : '') + getBelowThousand(rest);
+            }
+            return amountStr.trim();
+        }
+
+        // PDF generation using jsPDF
+        document.getElementById("downloadPDF").addEventListener("click", function () {
+            const { jsPDF } = window.jspdf;
+            const doc = new jsPDF();
+
+            // Adding Invoice Header
+            doc.text("Tax Invoice", 90, 10);
+            doc.text("Invoice Number: #001", 14, 20);
+            doc.text("Date: 2024-10-18", 14, 30);
+
+            // Adding "From" Section
+            doc.text("From:", 14, 40);
+            doc.text("Company Name: " + document.getElementById("companyName").value, 14, 50);
+            doc.text("GST No: " + document.getElementById("GSTNO").value, 14, 60);
+            doc.text("Address: " + document.getElementById("address").value, 14, 70);
+
+            // Adding "Bill To" Section
+            doc.text("Bill To:", 14, 80);
+            doc.text("Name: " + document.getElementById("clientName").value, 14, 90);
+            doc.text("Email: " + document.getElementById("clientEmail").value, 14, 100);
+            doc.text("Address: " + document.getElementById("clientAddress").value, 14, 110);
+
+            // Product Table
+            doc.autoTable({ html: "#invoiceTable", startY: 120 });
+
+            // Adding Totals Section
+            doc.text("SUB TOTAL: " + document.getElementById("subTotal").innerText, 14, doc.autoTable.previous.finalY + 10);
+            doc.text("CGST 9%: " + document.getElementById("cgst").innerText, 14, doc.autoTable.previous.finalY + 20);
+            doc.text("SGST 9%: " + document.getElementById("sgst").innerText, 14, doc.autoTable.previous.finalY + 30);
+            doc.text("GRAND TOTAL: " + document.getElementById("grandTotal").innerText, 14, doc.autoTable.previous.finalY + 40);
+            doc.text("Total Amount (In Words): " + document.getElementById("totalInWords").innerText, 14, doc.autoTable.previous.finalY + 50);
+
+            // Payment Terms Section
+            doc.text("Payment Terms:", 14, doc.autoTable.previous.finalY + 60);
+            doc.text("A/c Holder's Name: Abc", 14, doc.autoTable.previous.finalY + 70);
+            doc.text("Bank Name: State Bank of India (SBI)", 14, doc.autoTable.previous.finalY + 80);
+            doc.text("Account No: 123456789012", 14, doc.autoTable.previous.finalY + 90);
+            doc.text("IFSC Code: SBIN0001234", 14, doc.autoTable.previous.finalY + 100);
+            doc.text("Branch: Malad West, Mumbai", 14, doc.autoTable.previous.finalY + 110);
+
+            // Signature Section
+            doc.text("ABC.XYZ", 14, doc.autoTable.previous.finalY + 130);
+
+            // Save the PDF
+            doc.save("invoice.pdf");
+        });
+    </script>
+</body>
+
+</html>
