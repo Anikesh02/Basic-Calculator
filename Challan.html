@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Delivery Challan Generator</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .container {
+            width: 50%;
+            max-width: 800px;
+            background: white;
+            border: 1px solid #ccc;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .header h1 {
+            color: #007bff;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 5px;
+        }
+
+        input {
+            width: calc(100% - 22px);
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+
+        .fixed-width {
+            width: 100%;
+        }
+
+        button {
+            padding: 10px 15px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            margin-bottom: 15px;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+        }
+
+        th,
+        td {
+            padding: 10px;
+            border: 1px solid #ccc;
+            text-align: center;
+        }
+
+        .terms {
+            margin-top: 20px;
+            border: 1px solid #ccc;
+            padding: 10px;
+            height: 150px; /* Fixed height */
+            overflow-y: auto; /* Scrollable if content overflows */
+        }
+
+        .terms h3 {
+            margin: 0 0 10px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Delivery Challan</h1>
+        </div>
+
+        <div class="form-group">
+            <label for="challanNumber">Challan Number:</label>
+            <input type="text" id="challanNumber" value="#001" class="fixed-width">
+        </div>
+
+        <div class="form-group">
+            <label for="challanDate">Date:</label>
+            <input type="date" id="challanDate" class="fixed-width">
+        </div>
+
+        <div class="form-group">
+            <label for="vehicleNo">Vehicle No:</label>
+            <input type="text" id="vehicleNo" class="fixed-width" placeholder="Vehicle Number">
+        </div>
+
+        <div class="form-group">
+            <label for="senderName">Sender Name:</label>
+            <input type="text" id="senderName" class="fixed-width" placeholder="Sender Name">
+        </div>
+
+        <div class="form-group">
+            <label for="senderAddress">Sender Address:</label>
+            <input type="text" id="senderAddress" class="fixed-width" placeholder="Sender Address">
+        </div>
+
+        <div class="form-group">
+            <label for="senderGST">Sender GST No:</label>
+            <input type="text" id="senderGST" class="fixed-width" placeholder="Sender GST No">
+        </div>
+
+        <div class="form-group">
+            <label for="clientName">Client Name:</label>
+            <input type="text" id="clientName" class="fixed-width" placeholder="Client Name">
+        </div>
+
+        <div class="form-group">
+            <label for="clientAddress">Client Address:</label>
+            <input type="text" id="clientAddress" class="fixed-width" placeholder="Client Address">
+        </div>
+
+        <div class="form-group">
+            <label for="clientGST">Client GST No:</label>
+            <input type="text" id="clientGST" class="fixed-width" placeholder="Client GST No">
+        </div>
+
+        <form id="challanForm">
+            <div class="form-group">
+                <label for="product">Product Name:</label>
+                <input type="text" id="product" required>
+            </div>
+            <div style="display: flex; gap: 4px;">
+                <div class="form-group" style="width: 100%;">
+                    <label for="quantity">Quantity:</label>
+                    <input type="number" id="quantity" required>
+                </div>
+                <div class="form-group" style="width: 100%;">
+                    <label for="price">Price per Unit:</label>
+                    <input type="number" id="price" required>
+                </div>
+            </div>
+            <button type="button" id="addProduct">Add Product</button>
+        </form>
+
+        <table id="challanTable">
+            <thead>
+                <tr>
+                    <th>Product</th>
+                    <th>Quantity</th>
+                    <th>Price</th>
+                    <th>Total</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- Products will be added here -->
+            </tbody>
+        </table>
+
+        <div class="terms">
+            <h3>Terms and Conditions:</h3>
+            <p>
+                • Goods delivered as per the above details are in good condition.<br>
+                • This challan is for delivery purposes only and does not indicate a sale.<br>
+                • The final invoice will follow separately.<br>
+                • Goods once delivered cannot be returned without prior approval from the company.<br>
+                • Any discrepancies should be reported within 24 hours of delivery.
+            </p>
+        </div>
+
+        <button id="downloadPDF">Download PDF</button>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.4.0/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.13/jspdf.plugin.autotable.min.js"></script>
+    <script>
+        document.getElementById("addProduct").addEventListener("click", function () {
+            const product = document.getElementById("product").value;
+            const quantity = parseInt(document.getElementById("quantity").value);
+            const price = parseFloat(document.getElementById("price").value);
+
+            if (product && quantity && price) {
+                const total = (quantity * price).toFixed(2);
+                const tableBody = document.querySelector("#challanTable tbody");
+
+                const row = document.createElement("tr");
+                row.innerHTML = `
+                    <td>${product}</td>
+                    <td>${quantity}</td>
+                    <td>${price.toFixed(2)}</td>
+                    <td>${total}</td>
+                `;
+                tableBody.appendChild(row);
+                document.getElementById("challanForm").reset();
+            }
+        });
+
+        // PDF generation using jsPDF
+        document.getElementById("downloadPDF").addEventListener("click", function () {
+            const { jsPDF } = window.jspdf;
+            const doc = new jsPDF({ orientation: "portrait", unit: "mm", format: "a4", putOnlyUsedFonts: true });
+
+            // Adding Delivery Challan Header
+            doc.text("Delivery Challan", 105, 10, { align: "center" });
+            doc.text("Challan Number: " + document.getElementById("challanNumber").value, 14, 20);
+            doc.text("Date: " + document.getElementById("challanDate").value, 14, 30);
+            doc.text("Vehicle No: " + document.getElementById("vehicleNo").value, 14, 40);
+
+            // Adding "From" Section
+            doc.text("From:", 14, 50);
+            doc.text("Sender Name: " + document.getElementById("senderName").value, 14, 60);
+            doc.text("Address: " + document.getElementById("senderAddress").value, 14, 70);
+            doc.text("GST No: " + document.getElementById("senderGST").value, 14, 80);
+
+            // Adding "To" Section
+            doc.text("To:", 14, 90);
+            doc.text("Client Name: " + document.getElementById("clientName").value, 14, 100);
+            doc.text("Address: " + document.getElementById("clientAddress").value, 14, 110);
+            doc.text("GST No: " + document.getElementById("clientGST").value, 14, 120);
+
+            // Adding Product Table
+            doc.autoTable({ html: "#challanTable", startY: 130 });
+
+            // Adding Terms and Conditions
+            const terms = `• Goods delivered as per the above details are in good condition.
+• This challan is for delivery purposes only and does not indicate a sale. 
+• The final invoice will follow separately.
+• Goods once delivered cannot be returned without prior approval from the company.
+• Any discrepancies should be reported within 24 hours of delivery.`;
+
+            doc.text("Terms and Conditions:", 14, doc.autoTable.previous.finalY + 10);
+            const termsSplit = doc.splitTextToSize(terms, 190);
+            doc.text(termsSplit, 14, doc.autoTable.previous.finalY + 20);
+
+            // Adding Signature Section at the bottom of the page
+            const pageHeight = doc.internal.pageSize.getHeight();
+            const contentHeight = doc.autoTable.previous.finalY + 30; // 30 mm for spacing
+            const signatureY = Math.max(pageHeight - 40, contentHeight); // 40 mm space for signature
+
+            doc.text("Authorized Signature", 14, signatureY);
+
+            doc.save("delivery_challan.pdf");
+        });
+    </script>
+</body>
+
+</html>
